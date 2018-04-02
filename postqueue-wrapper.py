@@ -1,6 +1,6 @@
 #!/usr/bin/python2.7 -B
 # FOR NOW THIS IS HOW TO DELETE EMAILS:
-# for i in $(./postqueue-wrapper.py -c /etc/postfix-legacy-df01/  -s "<stringToDelete>"); do postsuper -d $i -c <postfixConfDir>; done
+# for i in $(./postqueue-wrapper.py -c <postfixConfDir> -s "<stringToDelete>"); do postsuper -d $i -c <postfixConfDir>; done
 # FIXME: make functions, test if rawInput out of range
 
 import sys
