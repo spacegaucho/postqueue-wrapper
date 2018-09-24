@@ -7,56 +7,67 @@ import sys
 import os
 from optparse import OptionParser
 
+# Global vars
+global options
+global args
+global segreagatedList
+global searchStrin
+
 parser = OptionParser(usage="usage: %prog -c <config> [-s <search>] [-v] ")
 parser.add_option("-c", "--config", action="store", dest="postfixConfig",
-    help="Postfix config directory")
+                  help="Postfix config directory")
 parser.add_option("-s", "--search", action="store", dest="searchString",
-    help="Filter postqueue output with search string," +
-    " if not selected will print all")
+                  help="Filter postqueue output with search string," +
+                  " if not selected will print all")
 parser.add_option("-v", "--verbose",
-    action="store_true", dest="verbose", default=False,
-    help="Be more verbvose about postqueue queued messages")
+                  action="store_true", dest="verbose", default=False,
+                  help="Be more verbvose about postqueue queued messages")
 (options, args) = parser.parse_args()
 
-# Declare some extra vars
 segreagatedList = []
+searchString = options.searchString
+
+def parse_postqueue():
+  searchString = options.searchString
+  postfixConfig = "-c " + options.postfixConfig
+  rawInput = (os.popen('postqueue -p ' + postfixConfig).read()).split('\n')
+  tmpString = ""
+  # Header is always suppressed
+  for element in rawInput[1:-1]:
+    if element != "":
+      tmpString += (element)
+    elif element == "":
+      segreagatedList.append(tmpString)
+      tmpString = ""
+
+def print_output():
+  if options.verbose == True:
+    print(element)
+  else:
+    print(element.split(' ',1)[0])
+
+def search():
+  for element in segreagatedList:
+    if element.find(searchString) >= 0:
+      print_output(element)
+
+def no_search():
+  for element in segreagatedList:
+    print_output(element)
 
 if options.postfixConfig and options.searchString:
-    searchString = options.searchString
-    postfixConfig = "-c " + options.postfixConfig
-    rawInput = (os.popen('postqueue -p ' + postfixConfig).read()).split('\n')
-    tmpString = ""
-    # Header is always suppressed
-    for element in rawInput[1:-1]:
-        if element != "":
-            tmpString += (element)
-        elif element == "":
-            segreagatedList.append(tmpString)
-            tmpString = ""
-    for element in segreagatedList:
-        if element.find(searchString) >= 0:
-            if options.verbose == True:
-                print(element)
-            else:
-                print(element.split(' ',1)[0])
-
+  try:
+    parse_postqueue
+  except:
+    print("E: Could not parse postqueue")
+  search
 
 elif options.postfixConfig and not options.searchString:
-    postfixConfig = "-c " + options.postfixConfig
-    rawInput = (os.popen('postqueue -p ' + postfixConfig).read()).split('\n')
-    tmpString = ""
-    # Header is always suppressed
-    for element in rawInput[1:-1]:
-        if element != "":
-            tmpString += (element)
-        elif element == "":
-            segreagatedList.append(tmpString)
-            tmpString = ""
-    for element in segreagatedList:
-        if options.verbose == True:
-            print(element)
-        else:
-            print(element.split(' ',1)[0])
+  try:
+    parse_postqueue
+  except:
+    print("E: Could not parse postqueue")
+  no_search
 
 else:
-    parser.error("wrong parameters. -c is required")
+  parser.error("wrong parameters. -c is required")
