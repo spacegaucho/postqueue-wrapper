@@ -42,7 +42,7 @@ def no_search(segreagatedList,searchString):
     print_output(element,segreagatedList)
 
 def del_search(segreagatedList,searchString):
-  print("I: Not yet implemented")
+  print("for i in $(./postqueue-wrapper.py -c " + postfixConfig + " -s \"" + searchString + "\"); do postsuper -d $i -c " + postfixConfig + "; done")
 
 def print_output(element,segreagatedList):
   if options.verbose == True:
@@ -84,4 +84,3 @@ def main():
 # Call main
 if __name__ == "__main__":
   main()
-
