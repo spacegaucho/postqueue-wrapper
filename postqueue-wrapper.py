@@ -42,7 +42,7 @@ def no_search(segreagatedList,searchString):
     print_output(element,segreagatedList)
 
 def del_search(segreagatedList,searchString):
-  print("for i in $(./postqueue-wrapper.py -c " + postfixConfig + " -s \"" + searchString + "\"); do postsuper -d $i -c " + postfixConfig + "; done")
+  print("for i in $(./postqueue-wrapper.py " + postfixConfig + " -s \"" + searchString + "\"); do postsuper -d $i " + postfixConfig + "; done")
 
 def print_output(element,segreagatedList):
   if options.verbose == True:
